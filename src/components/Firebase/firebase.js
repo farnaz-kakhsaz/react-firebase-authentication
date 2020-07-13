@@ -32,9 +32,12 @@ class Firebase {
   }
 
   // *** Auth API ***
+
+  // Returns Promise
   doCreateUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);
 
+  // Returns Promise
   doSignInWithEmailAndPassword = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
 
