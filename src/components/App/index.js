@@ -14,6 +14,7 @@ import * as ROUTES from "../../constants/routes";
 const App = () => (
   <Router>
     <Navigation />
+    <hr />
     <Switch>
       <Route path={ROUTES.SIGN_UP}>
         <SignUpPage />
