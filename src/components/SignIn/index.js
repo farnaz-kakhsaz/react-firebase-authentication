@@ -21,6 +21,9 @@ const INITIAL_STATE = {
 };
 
 class SignInFormBase extends Component {
+  // For performance issues (Memory leaks)
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE };
@@ -32,16 +35,26 @@ class SignInFormBase extends Component {
   };
 
   onSubmit = (event) => {
+    this._isMounted = true;
+
     event.preventDefault();
     const { email, password } = this.state;
+
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        // Don't call setState if component is unmount!
+        if (this._isMounted) {
+          this.setState({ ...INITIAL_STATE });
+          this.props.history.push(ROUTES.HOME);
+        }
       })
       .catch((error) => this.setState({ error }));
   };
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   render() {
     const { email, password, error } = this.state;
