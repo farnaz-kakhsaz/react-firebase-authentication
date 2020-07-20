@@ -43,6 +43,7 @@ class Firebase {
 
   doSignOut = () => this.auth.signOut();
 
+  // Returns Promise
   doPasswordReset = (email) => this.auth.sendPasswordResetEmail(email);
 
   doPasswordUpdate = (password) =>

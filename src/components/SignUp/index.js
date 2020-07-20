@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   passwordOne: "",
   passwordTwo: "",
   error: null,
+  isDisable: false,
 };
 
 class SignUpFormBase extends Component {
@@ -26,8 +27,17 @@ class SignUpFormBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
+  onChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
   onSubmit = (event) => {
+    event.preventDefault();
     const { username, email, passwordOne } = this.state;
+
+    this.setState({ isDisable: true });
+
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then((authUser) => {
@@ -36,22 +46,24 @@ class SignUpFormBase extends Component {
         // It could be the user’s home page, a protected route for only authenticated users.
         this.props.history.push(ROUTES.HOME);
       })
-      .catch((error) => this.setState({ error }));
-    event.preventDefault();
-  };
-
-  onChange = (event) => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
+      .catch((error) => this.setState({ error, isDisable: false }));
   };
 
   render() {
-    const { username, email, passwordOne, passwordTwo, error } = this.state;
+    const {
+      username,
+      email,
+      passwordOne,
+      passwordTwo,
+      error,
+      isDisable,
+    } = this.state;
     const isInvalid =
       passwordOne !== passwordTwo ||
       passwordOne === "" ||
       email === "" ||
-      username === "";
+      username === "" ||
+      isDisable;
 
     return (
       <form onSubmit={this.onSubmit}>

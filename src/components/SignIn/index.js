@@ -3,13 +3,15 @@ import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 // Components
 import { SignUpLink } from "../SignUp";
+import { PasswordForgetLink } from "../PasswordForget";
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 
 const SignInPage = () => (
   <div>
-    <h1>Sign In</h1>
+    <h1>SignIn</h1>
     <SignInForm />
+    <PasswordForgetLink />
     <SignUpLink />
   </div>
 );
@@ -49,7 +51,9 @@ class SignInFormBase extends Component {
           this.props.history.push(ROUTES.HOME);
         }
       })
-      .catch((error) => this.setState({ error }));
+      .catch(
+        (error) => this._isMounted && this.setState({ error, isDisable: false })
+      );
   };
 
   componentWillUnmount() {
