@@ -46,6 +46,7 @@ class Firebase {
   // Returns Promise
   doPasswordReset = (email) => this.auth.sendPasswordResetEmail(email);
 
+  // Returns Promise
   doPasswordUpdate = (password) =>
     this.auth.currentUser.updatePassword(password);
 }
