@@ -16,6 +16,7 @@ const AccountPage = () => (
   </AuthUserContext.Consumer>
 );
 
+// Broad-grained authorization
 const condition = (authUser) => !!authUser;
 
 export default withAuthorization(condition)(AccountPage);

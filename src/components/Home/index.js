@@ -8,6 +8,7 @@ const HomePage = () => (
   </>
 );
 
+// Broad-grained authorization
 const condition = (authUser) => !!authUser;
 
 export default withAuthorization(condition)(HomePage);
