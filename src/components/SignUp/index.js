@@ -41,6 +41,12 @@ class SignUpFormBase extends Component {
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then((authUser) => {
+        // Create a user in our Firebase realtime database
+        return this.props.firebase
+          .user(authUser.user.uid)
+          .set({ username, email });
+      })
+      .then(() => {
         this.setState({ ...INITIAL_STATE });
         // When a user signs up to our application, we want to redirect the user to another page.
         // It could be the user’s home page, a protected route for only authenticated users.
