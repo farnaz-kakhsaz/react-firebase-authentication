@@ -13,6 +13,7 @@ const SignInPage = () => (
     <SignInForm />
     <SignInGoogle />
     <SignInFacebook />
+    <SignInTwitter />
     <PasswordForgetLink />
     <SignUpLink />
   </div>
@@ -177,11 +178,58 @@ class SignInFacebookBase extends Component {
   }
 }
 
+class SignInTwitterBase extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      error: null,
+      isDisable: false,
+    };
+  }
+
+  onSubmit = (event) => {
+    event.preventDefault();
+
+    this.setState({ isDisable: true });
+
+    this.props.firebase
+      .doSignInWithTwitter()
+      .then((socialAuthUser) => {
+        // Create a user in our Firebase Realtime Database too
+        return this.props.firebase.user(socialAuthUser.user.uid).set({
+          username: socialAuthUser.additionalUserInfo.profile.name,
+          email: socialAuthUser.additionalUserInfo.profile.email,
+          roles: {},
+        });
+      })
+      .then(() => {
+        this.setState({ error: null, isDisable: false });
+        this.props.history.push(ROUTES.HOME);
+      })
+      .catch((error) => this.setState({ error, isDisable: false }));
+  };
+
+  render() {
+    const { error, isDisable } = this.state;
+    return (
+      <form onSubmit={this.onSubmit}>
+        <button type="submit" disabled={isDisable}>
+          Sign In with Twitter
+        </button>
+        {error && <p>{error.message}</p>}
+      </form>
+    );
+  }
+}
+
 const SignInForm = compose(withRouter, withFirebase)(SignInFormBase);
 
 const SignInGoogle = compose(withRouter, withFirebase)(SignInGoogleBase);
 
 const SignInFacebook = compose(withRouter, withFirebase)(SignInFacebookBase);
 
+const SignInTwitter = compose(withRouter, withFirebase)(SignInTwitterBase);
+
 export default SignInPage;
-export { SignInForm, SignInGoogle, SignInFacebook };
+export { SignInForm, SignInGoogle, SignInFacebook, SignInTwitter };
