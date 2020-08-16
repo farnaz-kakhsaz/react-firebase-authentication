@@ -7,6 +7,17 @@ import { PasswordForgetLink } from "../PasswordForget";
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 
+const ERROR_CODE_ACCOUNT_EXISTS =
+  "auth/account-exists-with-different-credential";
+
+const ERROR_MSG_ACCOUNT_EXISTS = `
+An account with this E-Mail address already exists.
+Try to login with this account instead. If you think the
+account is already used from one of the social logins, try
+to sign-in with one of them. Afterward, associate your accounts
+on your personal account page.
+`;
+
 const SignInPage = () => (
   <div>
     <h1>Sign In</h1>
@@ -116,7 +127,13 @@ class SignInGoogleBase extends Component {
         this.setState({ isDisable: false, error: null });
         this.props.history.push(ROUTES.HOME);
       })
-      .catch((error) => this.setState({ isDisable: false, error }));
+      .catch((error) => {
+        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+          error.message = ERROR_MSG_ACCOUNT_EXISTS;
+        }
+
+        this.setState({ isDisable: false, error });
+      });
   };
 
   render() {
@@ -162,7 +179,13 @@ class SignInFacebookBase extends Component {
         this.setState({ error: null, isDisable: false });
         this.props.history.push(ROUTES.HOME);
       })
-      .catch((error) => this.setState({ error, isDisable: false }));
+      .catch((error) => {
+        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+          error.message = ERROR_MSG_ACCOUNT_EXISTS;
+        }
+
+        this.setState({ error, isDisable: false });
+      });
   };
 
   render() {
@@ -207,7 +230,13 @@ class SignInTwitterBase extends Component {
         this.setState({ error: null, isDisable: false });
         this.props.history.push(ROUTES.HOME);
       })
-      .catch((error) => this.setState({ error, isDisable: false }));
+      .catch((error) => {
+        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+          error.message = ERROR_MSG_ACCOUNT_EXISTS;
+        }
+
+        this.setState({ error, isDisable: false });
+      });
   };
 
   render() {

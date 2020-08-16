@@ -30,6 +30,11 @@ class Firebase {
   constructor() {
     app.initializeApp(config);
 
+    // Previously (before creating the account page), when we set up our Firebase class, we overrode its auth property with app.auth().
+    // However, to create the credential from the email and password in the component, we need access
+    // to the Firebase internal auth, which has the EmailAuthProvider property, so we reference it before
+    // we override it with app.auth() in the next lines.
+    this.emailAuthProvider = app.auth.EmailAuthProvider;
     this.auth = app.auth();
     this.db = app.database();
 
