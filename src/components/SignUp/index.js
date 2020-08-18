@@ -68,11 +68,17 @@ class SignUpFormBase extends Component {
           .user(authUser.user.uid)
           .set({ username, email, roles });
       })
+      .then(() => this.props.firebase.doSendEmailVerification())
       .then(() => {
         this.setState({ ...INITIAL_STATE });
         // When a user signs up to our application, we want to redirect the user to another page.
         // It could be the user’s home page, a protected route for only authenticated users.
-        this.props.history.push(ROUTES.HOME);
+        this.props.history.push({
+          pathname: `${ROUTES.HOME}`,
+          state: { justSignUp: true },
+        });
+        // We use 'justSignUp' in the home page to not shown
+        // “Send confirmation E-Mail” button the first time a user signs up.
       })
       .catch((error) => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
