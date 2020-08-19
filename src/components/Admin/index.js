@@ -97,7 +97,7 @@ class UserItemBase extends Component {
   constructor(props) {
     super(props);
 
-    // Use passed information from UserList component as default local state
+    // Use passed information from UserList component as default local state:
     // If users navigate from the UserList to the UserItem component, they should arrive immediately.
     // If they enter the URL by hand in the browser or with a Link component that doesn’t pass them to
     // the UserItem component, the user needs to be fetched from the Firebase database.
