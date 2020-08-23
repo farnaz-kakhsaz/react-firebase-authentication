@@ -70,22 +70,25 @@ class MessagesBase extends Component {
   componentDidMount() {
     this.setState({ loading: true });
 
-    this.props.firebase.messages().on("value", (snapshot) => {
-      const messageObject = snapshot.val();
+    this.props.firebase
+      .messages()
+      .orderByChild("createdAt")
+      .on("value", (snapshot) => {
+        const messageObject = snapshot.val();
 
-      // We need to know if the list of messages is empty (see constructor), if the message API
-      // didn’t return any messages and the local state is changed from an empty array to null
-      if (messageObject) {
-        const messageList = Object.keys(messageObject).map((item) => ({
-          ...messageObject[item],
-          uid: item,
-        }));
+        // We need to know if the list of messages is empty (see constructor), if the message API
+        // didn’t return any messages and the local state is changed from an empty array to null
+        if (messageObject) {
+          const messageList = Object.keys(messageObject).map((item) => ({
+            ...messageObject[item],
+            uid: item,
+          }));
 
-        this.setState({ messages: messageList, loading: false });
-      } else {
-        this.setState({ messages: null, loading: false });
-      }
-    });
+          this.setState({ messages: messageList, loading: false });
+        } else {
+          this.setState({ messages: null, loading: false });
+        }
+      });
   }
 
   componentWillUnmount() {
