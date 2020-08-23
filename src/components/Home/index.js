@@ -50,6 +50,10 @@ class MessagesBase extends Component {
     this.setState({ text: "" });
   };
 
+  onRemoveMessage = (uid) => {
+    this.props.firebase.message(uid).remove();
+  };
+
   componentDidMount() {
     this.setState({ loading: true });
 
@@ -84,7 +88,10 @@ class MessagesBase extends Component {
             {loading && <div>Loading ...</div>}
 
             {messages ? (
-              <MessageList messages={messages} />
+              <MessageList
+                messages={messages}
+                onRemoveMessage={this.onRemoveMessage}
+              />
             ) : (
               <p>There are no messages ...</p>
             )}
@@ -100,17 +107,24 @@ class MessagesBase extends Component {
   }
 }
 
-const MessageList = ({ messages }) => (
+const MessageList = ({ messages, onRemoveMessage }) => (
   <ul>
     {messages.map((item) => (
-      <MessageItem key={item.uid} message={item} />
+      <MessageItem
+        key={item.uid}
+        message={item}
+        onRemoveMessage={onRemoveMessage}
+      />
     ))}
   </ul>
 );
 
-const MessageItem = ({ message }) => (
+const MessageItem = ({ message, onRemoveMessage }) => (
   <li>
     <strong>{message.userId}</strong> {message.text}
+    <button type="submit" onClick={() => onRemoveMessage(message.uid)}>
+      Remove
+    </button>
   </li>
 );
 
