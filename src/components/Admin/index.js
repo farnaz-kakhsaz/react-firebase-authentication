@@ -132,8 +132,7 @@ class UserItemBase extends Component {
 
   render() {
     const { user, loading } = this.state;
-    console.log(user);
-    console.log(this.props.match.params);
+
     return (
       <>
         <h2>User ({this.props.match.params.id})</h2>

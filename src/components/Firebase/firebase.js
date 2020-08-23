@@ -17,6 +17,12 @@ class Firebase {
   constructor() {
     app.initializeApp(config);
 
+    // * Helper * //
+
+    // When using Firebase, it’s best not to choose the date yourself,
+    // but let Firebase choose it depending on their internal mechanics.
+    this.serverValue = app.database.ServerValue;
+
     // Previously (before creating the account page), when we set up our Firebase class, we overrode its auth property with app.auth().
     // However, to create the credential from the email and password in the component, we need access
     // to the Firebase internal auth, which has the EmailAuthProvider property, so we reference it before
