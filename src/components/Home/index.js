@@ -25,6 +25,7 @@ class MessagesBase extends Component {
       text: "",
       messages: [],
       loading: false,
+      limit: 5,
     };
   }
 
@@ -67,12 +68,14 @@ class MessagesBase extends Component {
     });
   };
 
-  componentDidMount() {
+  onListenForMessage() {
     this.setState({ loading: true });
 
+    // limitToLast() Sets the maximum number of items to return from the end of the ordered list of results.
     this.props.firebase
       .messages()
       .orderByChild("createdAt")
+      .limitToLast(this.state.limit)
       .on("value", (snapshot) => {
         const messageObject = snapshot.val();
 
@@ -91,6 +94,17 @@ class MessagesBase extends Component {
       });
   }
 
+  onNextPage = () => {
+    this.setState(
+      (state) => ({ limit: state.limit + 5 }),
+      this.onListenForMessage
+    );
+  };
+
+  componentDidMount() {
+    this.onListenForMessage();
+  }
+
   componentWillUnmount() {
     this.props.firebase.messages().off();
   }
@@ -103,6 +117,12 @@ class MessagesBase extends Component {
         {(authUser) => (
           <>
             {loading && <div>Loading ...</div>}
+
+            {!loading && messages && (
+              <button type="button" onClick={this.onNextPage}>
+                More
+              </button>
+            )}
 
             {messages ? (
               <MessageList
