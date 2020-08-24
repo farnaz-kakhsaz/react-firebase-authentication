@@ -98,6 +98,7 @@ class MessagesBase extends Component {
 
   render() {
     const { text, messages, loading } = this.state;
+    const hiddenMoreBtn = messages.length === this.state.limit;
 
     return (
       <AuthUserContext.Consumer>
@@ -105,7 +106,7 @@ class MessagesBase extends Component {
           <>
             {loading && <div>Loading ...</div>}
 
-            {!loading && messages && (
+            {!loading && messages && hiddenMoreBtn && (
               <button type="button" onClick={this.onNextPage}>
                 More
               </button>
